@@ -60,7 +60,7 @@ namespace AdoNetCorePractica.Repositories
 
             while (await this.reader.ReadAsync())
             {
-                plantilla.Add(new Plantilla(int.Parse(this.reader["HOSPITAL_COD"].ToString()), int.Parse(this.reader["SALA_COD"].ToString()), int.Parse(this.reader["EMPLEADO_NO"].ToString()), this.reader["APELLIDO"].ToString(), ));
+                plantilla.Add(new Plantilla(int.Parse(this.reader["HOSPITAL_COD"].ToString()), int.Parse(this.reader["SALA_COD"].ToString()), int.Parse(this.reader["EMPLEADO_NO"].ToString()), this.reader["APELLIDO"].ToString(), )); 
             }
 
             await this.reader.CloseAsync();
