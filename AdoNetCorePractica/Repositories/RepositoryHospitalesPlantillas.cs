@@ -47,7 +47,7 @@ namespace AdoNetCorePractica.Repositories
 
         public async Task<List<Plantilla>> GetPlantillaHospitalAsync(string nombreHospital)
         {
-            string sql = "SP_PLANTILLA_HOSPITAL";
+            string sql = "SP_PLANTILLA_DOCTORES_HOSPITAL";
 
             this.cmd.Parameters.AddWithValue("@nombreHospital", nombreHospital);
             this.cmd.CommandType = System.Data.CommandType.StoredProcedure;
@@ -60,7 +60,7 @@ namespace AdoNetCorePractica.Repositories
 
             while (await this.reader.ReadAsync())
             {
-                plantilla.Add(new Plantilla(int.Parse(this.reader["HOSPITAL_COD"].ToString()), int.Parse(this.reader["SALA_COD"].ToString()), int.Parse(this.reader["EMPLEADO_NO"].ToString()), this.reader["APELLIDO"].ToString(), )); 
+                plantilla.Add(new Plantilla(this.reader["APELLIDO"].ToString(), this.reader["FUNCION"].ToString(), int.Parse(this.reader["SALARIO"].ToString()))); 
             }
 
             await this.reader.CloseAsync();
@@ -68,6 +68,33 @@ namespace AdoNetCorePractica.Repositories
             await this.conn.CloseAsync();
 
             return plantilla;
+        }
+
+        public async Task<List<string>> GetDatos(string nombreHospital)
+        {
+            string sql = "SP_GET_PRACTICA";
+
+            this.cmd.Parameters.AddWithValue("@nombreHospital", nombreHospital);
+            this.cmd.CommandType = System.Data.CommandType.StoredProcedure;
+            this.cmd.CommandText = sql;
+
+            await this.conn.OpenAsync();
+
+            List<string> datos = new List<string>();
+            this.reader = await this.cmd.ExecuteReaderAsync();
+
+            while (await this.reader.ReadAsync())
+            {
+                datos.Add(this.reader["TOTAL_SALARIO"].ToString());
+                datos.Add(this.reader["MEDIA_SALARIO"].ToString());
+                datos.Add(this.reader["EMPLEADOS"].ToString());
+            }
+
+            await this.reader.CloseAsync();
+            this.cmd.Parameters.Clear();
+            await this.conn.CloseAsync();
+
+            return datos;
         }
 
     }
