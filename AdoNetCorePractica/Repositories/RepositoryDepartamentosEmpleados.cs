@@ -61,6 +61,7 @@ namespace AdoNetCorePractica.Repositories
             await this.cmd.ExecuteNonQueryAsync();
 
             await this.conn.CloseAsync();
+            this.cmd.Parameters.Clear();
         }
     }
 }
